@@ -50,8 +50,11 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
     config = copy.deepcopy(config)
     config["model_name"] = resolved_model_name
 
+    from minisweagent.utils.log import logger
+
     model_class = get_model_class(resolved_model_name, config.pop("model_class", ""))
 
+    logger.error(f"Using model class: {model_class}, {type(model_class)}")
     if (from_env := os.getenv("MSWEA_MODEL_API_KEY")) and not str(type(model_class)).endswith("DeterministicModel"):
         config.setdefault("model_kwargs", {})["api_key"] = from_env
 
@@ -75,6 +78,8 @@ _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
+    "deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct": "minisweagent.models.local.huggingface.HuggingFaceModel",
+    "gpt2": "minisweagent.models.local.huggingface.HuggingFaceModel",
 }
 
 
@@ -100,6 +105,11 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
         from minisweagent.models.anthropic import AnthropicModel
 
         return AnthropicModel
+
+    if "deepseek" in model_name.lower() or "gpt2" in model_name.lower():
+        from minisweagent.models.local import HuggingFaceModel
+
+        return HuggingFaceModel
 
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
