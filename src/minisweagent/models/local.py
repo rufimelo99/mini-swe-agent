@@ -42,7 +42,7 @@ class HuggingFaceModel(LitellmModel):
         logger.info("Querying model with messages: %s", messages)
         prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages]) + "\nassistant: "
         inputs = self.tokenizer(prompt, return_tensors="pt")
-        outputs = self.model.generate(**inputs, max_new_tokens=kwargs.get("max_tokens", 256))
+        outputs = self.model.generate(**inputs)
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         response_content = response.split("assistant:")[-1].strip()
         return {"choices": [{"message": {"role": "assistant", "content": response_content}}]}
