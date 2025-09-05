@@ -51,7 +51,7 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
     config["model_name"] = resolved_model_name
 
     from minisweagent.utils.log import logger
-    
+
     model_class = get_model_class(resolved_model_name, config.pop("model_class", ""))
 
     logger.error(f"Using model class: {model_class}, {type(model_class)}")
@@ -110,7 +110,6 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
         from minisweagent.models.local import HuggingFaceModel
 
         return HuggingFaceModel
-
 
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
