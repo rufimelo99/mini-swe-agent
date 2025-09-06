@@ -61,12 +61,12 @@ def main(
     @dataclass
     class ToyEnv:
         template: str
-        config: dict = {}
+        config: dict
 
         def get_template_vars(self):
             return {}
         
-    env2 = ToyEnv(template="ola")
+    env2 = ToyEnv(template="ola", config={})
     agent = InteractiveAgent(get_model(model_name, config.get("model", {})),env2,**({"mode": "yolo"} | config.get("agent", {})),)
 
     exit_status, result, extra_info = None, None, None
