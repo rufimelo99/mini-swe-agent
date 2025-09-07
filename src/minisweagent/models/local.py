@@ -80,7 +80,7 @@ class HuggingFaceModel(LitellmModel):
             "\n".join([f"{m['role']}: {m['content']}" for m in messages])
             + "\nassistant: "
         )
-        inputs = self.tokenizer(prompt, return_tensors="pt")
+        inputs = self.tokenizer(prompt, return_tensors="pt", max_length=768, truncation=True)
         # Move inputs to the correct device
         inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
         outputs = self.model.generate(**inputs)
@@ -95,7 +95,9 @@ class HuggingFaceModel(LitellmModel):
         self.n_calls += 1
         cost = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost)
-        return response
+        return {
+            "content": response or "",  # type: ignore
+        }
 
     def _calculate_cost(self, response: dict) -> float:
         # Get the number of tokens
