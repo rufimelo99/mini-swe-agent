@@ -80,7 +80,9 @@ class HuggingFaceModel(LitellmModel):
             "\n".join([f"{m['role']}: {m['content']}" for m in messages])
             + "\nassistant: "
         )
-        inputs = self.tokenizer(prompt, return_tensors="pt", device=self.model.device)
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        # Move inputs to the correct device
+        inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
         outputs = self.model.generate(**inputs)
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         response_content = response.split("assistant:")[-1].strip()
