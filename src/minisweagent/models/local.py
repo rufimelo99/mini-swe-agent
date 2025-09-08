@@ -99,10 +99,7 @@ class HuggingFaceModel(LitellmModel):
 
     def _calculate_cost(self, response: dict) -> float:
         # Get the number of tokens
-        num_tokens = len(
-            response.get("choices", [])[0].get("message", {}).get("content", "").split()
-        )
-        return num_tokens
+        return len(self.tokenizer.tokenize(response)) * 0.0001  # Example cost calculation
 
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config) | {
