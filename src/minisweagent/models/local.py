@@ -63,7 +63,8 @@ class HuggingFaceModel(LitellmModel):
             output_hidden_states=True,
             output_attentions=True,
             attn_implementation="eager",  # <- crucial for output_attentions
-        ).to(DEVICE)
+            device_map="auto" if DEVICE == "cuda" else None,
+        )
 
         logger.info(
             f"Initialized local DeepSeekModel with model {self.config.model_name}"
