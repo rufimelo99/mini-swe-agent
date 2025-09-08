@@ -85,10 +85,8 @@ class HuggingFaceModel(LitellmModel):
         inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
         outputs = self.model.generate(**inputs)
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        response_content = response.split("assistant:")[-1].strip()
-        return {
-            "choices": [{"message": {"role": "assistant", "content": response_content}}]
-        }
+        
+        return response
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
