@@ -142,6 +142,8 @@ def process_instance(
 
     try:
         env = get_sb_environment(config, instance)
+        logger.info(f"Environment for instance {instance_id} is ready.")
+        logger.info(f"Running instance {instance_id} with model {model.config.model_name}")
         agent = ProgressTrackingAgent(
             model,
             env,
@@ -149,6 +151,7 @@ def process_instance(
             instance_id=instance_id,
             **config.get("agent", {}),
         )
+        logger.info(f"Agent for {agent} is ready.")
         exit_status, result = agent.run(task)
     except Exception as e:
         logger.error(f"Error processing instance {instance_id}: {e}", exc_info=True)

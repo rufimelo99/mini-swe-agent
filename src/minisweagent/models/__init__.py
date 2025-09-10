@@ -105,8 +105,8 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
         from minisweagent.models.anthropic import AnthropicModel
 
         return AnthropicModel
-
-    if "deepseek" in model_name.lower() or "gpt2" in model_name.lower():
+    #HuggingFaceTB/SmolLM2-360M-Instruct
+    if any(keyword in model_name.lower() for keyword in ["deepseek", "gpt2", "smollm"]):
         from minisweagent.models.local import HuggingFaceModel
 
         return HuggingFaceModel
